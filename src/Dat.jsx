@@ -1,7 +1,7 @@
 import { useState, useContext, useEffect } from 'react';
 import { cont } from './App';
 
-export default function Dat({ get }) {
+export default function Dat({ get,check}) {
     const { data, del } = useContext(cont);
     const [proto, setProto] = useState([]);
 
@@ -16,6 +16,7 @@ export default function Dat({ get }) {
             return r.id != e;
         })
         setProto(anotherData);
+        check(true);
     }
     console.log(del);
     return (

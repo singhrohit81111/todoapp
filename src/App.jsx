@@ -7,11 +7,13 @@ import Dat from './Dat';
 export const cont = createContext();
 function App() {
   const [bol, setBol] = useState(false);
-  const [up, setUp] = useState(null);
-  const [count, setCount] = useState(0);
-  let [data, setData] = useState([]);
+  const [up, setUp] = useState(false);
+  const [count, setCount] = useState(1);
+  var [data, setData] = useState([]);
   const [del, setDel] = useState(false);
   const [sam, setSam] = useState(false);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
 
   const handleSubmit = (e) => {
     if (sam === true) {
@@ -26,6 +28,9 @@ function App() {
       console.log(del);
       console.log(data);
       setSam(false);
+      setCount(data.length+1);
+      setName("");
+      setEmail("");
     }
     else {
       e.preventDefault();
@@ -42,9 +47,8 @@ function App() {
       if (del == false) {
         setDel(true)
       }
-      e.target[0].value = "";
-      e.target[1].value = "";
-      e.target[2].value = "";
+      setName("");
+      setEmail("");
       setCount(Number(count) + 1);
       console.log("rmn");
     }
@@ -52,8 +56,10 @@ function App() {
   const handleClick = () => {
     setData([]);
     setDel(false);
-    setCount(0);
+    setCount(1);
     console.log("Chu");
+    setName("");
+    setEmail("");
   }
 
   const handleClick2 = () => {
@@ -67,9 +73,32 @@ function App() {
   const getCallback = (e) => {
     setCount(e);
     setSam(true);
+    const cc=data.filter(z=>{
+      if(z.id===e){
+        return z;
+      }
+      return null;
+    })
+   setName(cc.map(e=>{return e.name}))
+   setEmail(cc.map(e=>{return e.email}));
 
   }
   console.log(count);
+
+  const handleChange1 = (e) => {
+    setName(e.target.value);
+  }
+
+  const handleChange2 = (e) => {
+    setEmail(e.target.value);
+  }
+  const getCheck=(e)=>{
+      if(e){
+        setName("");
+        setEmail("");
+        console.log(data.length);
+      }
+  }
   return (
     <>
       <div className='d'>
@@ -84,13 +113,13 @@ function App() {
         {bol && <div className='d2'>
           <form onSubmit={handleSubmit}>
             <input type='text' placeholder='Id' value={count} />
-            <input type='text' placeholder='Name' required />
-            <input type='email' placeholder='E-mail' required />
+            <input type='text' placeholder='Name' value={name} onChange={handleChange1} required />
+            <input type='email' placeholder='E-mail' value={email} onChange={handleChange2} required />
             <button>Submit</button>
           </form>
         </div>}
         <cont.Provider value={{ data, del }}>
-          <Dat get={getCallback} />
+          <Dat get={getCallback}  check={getCheck}/>
         </cont.Provider>
       </div>
 
